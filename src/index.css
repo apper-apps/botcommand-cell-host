@@ -1,0 +1,96 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-discord-blurple to-discord-dark text-white px-6 py-3 rounded-full font-medium hover:scale-105 hover:brightness-110 transition-all duration-200 shadow-lg;
+  }
+  
+  .btn-secondary {
+    @apply bg-discord-surface hover:bg-discord-tertiary text-white px-6 py-3 rounded-full font-medium hover:scale-105 transition-all duration-200 border border-discord-tertiary;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-discord-surface rounded-lg shadow-discord dark:shadow-discord-lg border border-gray-200 dark:border-discord-tertiary;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-discord-tertiary transition-all duration-200 cursor-pointer hover:scale-[1.02];
+  }
+  
+  .sidebar-item.active {
+    @apply bg-gradient-to-r from-discord-blurple/20 to-discord-dark/20 text-discord-blurple border-r-2 border-discord-blurple;
+  }
+}
+
+/* Toast Customizations */
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  @apply rounded-lg shadow-discord font-inter;
+}
+
+.Toastify__toast--success {
+  @apply bg-discord-green/90 text-white;
+}
+
+.Toastify__toast--error {
+  @apply bg-discord-red/90 text-white;
+}
+
+.Toastify__toast--info {
+  @apply bg-discord-blurple/90 text-white;
+}
+
+.Toastify__toast--warning {
+  @apply bg-discord-yellow/90 text-gray-900;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-discord-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-discord-tertiary rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* Form Inputs */
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-300 dark:border-discord-tertiary rounded-lg bg-white dark:bg-discord-surface text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-discord-blurple focus:border-transparent transition-all duration-200;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
+}

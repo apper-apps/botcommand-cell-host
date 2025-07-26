@@ -1,0 +1,105 @@
+[
+  {
+    "Id": 1,
+    "guildId": "987654321098765432",
+    "title": "Welcome to our Server!",
+    "description": "We're glad you're here! Please read our rules and have fun chatting with everyone.",
+    "color": "#5865F2",
+    "thumbnail": "https://cdn.discordapp.com/attachments/example/welcome.png",
+    "image": "",
+    "fields": [
+      {
+        "name": "📋 Rules",
+        "value": "Check out #rules for server guidelines",
+        "inline": true
+      },
+      {
+        "name": "🎮 Gaming",
+        "value": "Join #gaming for game discussions",
+        "inline": true
+      },
+      {
+        "name": "💬 General",
+        "value": "Chat in #general with other members",
+        "inline": true
+      }
+    ],
+    "createdAt": "2023-10-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "guildId": "987654321098765432",
+    "title": "Server Rules",
+    "description": "Please follow these rules to maintain a friendly community",
+    "color": "#ED4245",
+    "thumbnail": "",
+    "image": "",
+    "fields": [
+      {
+        "name": "1. Be Respectful",
+        "value": "Treat all members with respect and kindness",
+        "inline": false
+      },
+      {
+        "name": "2. No Spam",
+        "value": "Avoid excessive messaging or repeating content",
+        "inline": false
+      },
+      {
+        "name": "3. Stay On Topic",
+        "value": "Keep discussions relevant to the channel",
+        "inline": false
+      }
+    ],
+    "createdAt": "2023-10-16T14:20:00Z"
+  },
+  {
+    "Id": 3,
+    "guildId": "765432109876543210",
+    "title": "Study Resources",
+    "description": "Helpful resources for your studies",
+    "color": "#57F287",
+    "thumbnail": "",
+    "image": "https://cdn.discordapp.com/attachments/example/study.png",
+    "fields": [
+      {
+        "name": "📚 Materials",
+        "value": "Find study materials in our shared drive",
+        "inline": true
+      },
+      {
+        "name": "⏰ Schedule",
+        "value": "Check the study schedule in #announcements",
+        "inline": true
+      }
+    ],
+    "createdAt": "2023-10-17T09:45:00Z"
+  },
+  {
+    "Id": 4,
+    "guildId": "654321098765432109",
+    "title": "Art Showcase Guidelines",
+    "description": "Guidelines for sharing your artwork",
+    "color": "#FEE75C",
+    "thumbnail": "https://cdn.discordapp.com/attachments/example/art.png",
+    "image": "",
+    "fields": [
+      {
+        "name": "🎨 Original Work",
+        "value": "Only share your original creations",
+        "inline": false
+      },
+      {
+        "name": "📝 Description",
+        "value": "Include a brief description of your artwork",
+        "inline": false
+      },
+      {
+        "name": "💡 Feedback",
+        "value": "Constructive feedback is always welcome",
+        "inline": false
+      }
+    ],
+    "createdAt": "2023-10-19T12:30:00Z"
+  }
+]

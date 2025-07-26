@@ -1,0 +1,47 @@
+[
+  {
+    "Id": 1,
+    "guildId": "987654321098765432",
+    "channelId": "",
+    "trigger": "hello",
+    "response": "Hello there! Welcome to our server! 👋",
+    "enabled": true,
+    "createdAt": "2023-10-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "guildId": "987654321098765432",
+    "channelId": "123456789012345678",
+    "trigger": "rules",
+    "response": "Please check out our server rules in #rules channel!",
+    "enabled": true,
+    "createdAt": "2023-10-16T14:20:00Z"
+  },
+  {
+    "Id": 3,
+    "guildId": "765432109876543210",
+    "channelId": "",
+    "trigger": "study",
+    "response": "Looking for study materials? Check our pinned messages! 📚",
+    "enabled": true,
+    "createdAt": "2023-10-17T09:45:00Z"
+  },
+  {
+    "Id": 4,
+    "guildId": "987654321098765432",
+    "channelId": "234567890123456789",
+    "trigger": "discord",
+    "response": "This is our Discord server! Feel free to chat and make friends! 🎮",
+    "enabled": false,
+    "createdAt": "2023-10-18T16:10:00Z"
+  },
+  {
+    "Id": 5,
+    "guildId": "654321098765432109",
+    "channelId": "",
+    "trigger": "art",
+    "response": "Share your amazing artwork in #showcase! We'd love to see it! 🎨",
+    "enabled": true,
+    "createdAt": "2023-10-19T12:30:00Z"
+  }
+]

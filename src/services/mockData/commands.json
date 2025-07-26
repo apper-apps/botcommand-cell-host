@@ -1,0 +1,609 @@
+[
+  {
+    "id": 1,
+    "name": "ban",
+    "category": "admin",
+    "description": "Ban a user from the server with optional reason and duration",
+    "usage": "/ban <user> [reason] [duration]",
+    "examples": [
+      "/ban @user Spamming",
+      "/ban @user Breaking rules 7d"
+    ],
+    "permissions": ["BAN_MEMBERS"]
+  },
+  {
+    "id": 2,
+    "name": "kick",
+    "category": "admin",
+    "description": "Kick a user from the server with optional reason",
+    "usage": "/kick <user> [reason]",
+    "examples": [
+      "/kick @user Inappropriate behavior",
+      "/kick @user"
+    ],
+    "permissions": ["KICK_MEMBERS"]
+  },
+  {
+    "id": 3,
+    "name": "mute",
+    "category": "admin",
+    "description": "Mute a user to prevent them from sending messages",
+    "usage": "/mute <user> [duration] [reason]",
+    "examples": [
+      "/mute @user 1h Excessive caps",
+      "/mute @user 30m"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 4,
+    "name": "unmute",
+    "category": "admin",
+    "description": "Remove mute from a user",
+    "usage": "/unmute <user>",
+    "examples": ["/unmute @user"],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 5,
+    "name": "warn",
+    "category": "admin",
+    "description": "Issue a warning to a user with reason",
+    "usage": "/warn <user> <reason>",
+    "examples": ["/warn @user Please follow server rules"],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 6,
+    "name": "warnings",
+    "category": "admin",
+    "description": "View warnings for a user",
+    "usage": "/warnings <user>",
+    "examples": ["/warnings @user"],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 7,
+    "name": "clearwarnings",
+    "category": "admin",
+    "description": "Clear all warnings for a user",
+    "usage": "/clearwarnings <user>",
+    "examples": ["/clearwarnings @user"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 8,
+    "name": "purge",
+    "category": "admin",
+    "description": "Delete multiple messages from current channel",
+    "usage": "/purge <amount> [user]",
+    "examples": [
+      "/purge 50",
+      "/purge 10 @user"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 9,
+    "name": "slowmode",
+    "category": "admin",
+    "description": "Set slowmode for current channel",
+    "usage": "/slowmode <seconds>",
+    "examples": [
+      "/slowmode 5",
+      "/slowmode 0"
+    ],
+    "permissions": ["MANAGE_CHANNELS"]
+  },
+  {
+    "id": 10,
+    "name": "lockdown",
+    "category": "admin",
+    "description": "Lock channel to prevent messages from non-staff",
+    "usage": "/lockdown [channel]",
+    "examples": [
+      "/lockdown",
+      "/lockdown #general"
+    ],
+    "permissions": ["MANAGE_CHANNELS"]
+  },
+  {
+    "id": 11,
+    "name": "unlock",
+    "category": "admin",
+    "description": "Unlock a previously locked channel",
+    "usage": "/unlock [channel]",
+    "examples": [
+      "/unlock",
+      "/unlock #general"
+    ],
+    "permissions": ["MANAGE_CHANNELS"]
+  },
+  {
+    "id": 12,
+    "name": "role",
+    "category": "admin",
+    "description": "Add or remove roles from users",
+    "usage": "/role <add/remove> <user> <role>",
+    "examples": [
+      "/role add @user @Member",
+      "/role remove @user @Muted"
+    ],
+    "permissions": ["MANAGE_ROLES"]
+  },
+  {
+    "id": 13,
+    "name": "createrole",
+    "category": "admin",
+    "description": "Create a new role with specified name and color",
+    "usage": "/createrole <name> [color] [permissions]",
+    "examples": [
+      "/createrole VIP #ff0000",
+      "/createrole Moderator #0099ff MANAGE_MESSAGES"
+    ],
+    "permissions": ["MANAGE_ROLES"]
+  },
+  {
+    "id": 14,
+    "name": "deleterole",
+    "category": "admin",
+    "description": "Delete an existing role",
+    "usage": "/deleterole <role>",
+    "examples": ["/deleterole @OldRole"],
+    "permissions": ["MANAGE_ROLES"]
+  },
+  {
+    "id": 15,
+    "name": "nickname",
+    "category": "admin",
+    "description": "Change a user's nickname",
+    "usage": "/nickname <user> [nickname]",
+    "examples": [
+      "/nickname @user NewName",
+      "/nickname @user"
+    ],
+    "permissions": ["MANAGE_NICKNAMES"]
+  },
+  {
+    "id": 16,
+    "name": "createchannel",
+    "category": "admin",
+    "description": "Create a new text or voice channel",
+    "usage": "/createchannel <type> <name> [category]",
+    "examples": [
+      "/createchannel text new-channel",
+      "/createchannel voice Voice Chat General"
+    ],
+    "permissions": ["MANAGE_CHANNELS"]
+  },
+  {
+    "id": 17,
+    "name": "deletechannel",
+    "category": "admin",
+    "description": "Delete a channel",
+    "usage": "/deletechannel <channel>",
+    "examples": ["/deletechannel #old-channel"],
+    "permissions": ["MANAGE_CHANNELS"]
+  },
+  {
+    "id": 18,
+    "name": "setlogs",
+    "category": "admin",
+    "description": "Set the logging channel for administrative actions",
+    "usage": "/setlogs <channel>",
+    "examples": ["/setlogs #mod-logs"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 19,
+    "name": "changelogs",
+    "category": "admin",
+    "description": "Change the current logging channel",
+    "usage": "/changelogs <channel>",
+    "examples": ["/changelogs #new-logs"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 20,
+    "name": "serverinfo",
+    "category": "admin",
+    "description": "Display detailed server information",
+    "usage": "/serverinfo",
+    "examples": ["/serverinfo"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 21,
+    "name": "userinfo",
+    "category": "admin",
+    "description": "Display detailed information about a user",
+    "usage": "/userinfo [user]",
+    "examples": [
+      "/userinfo @user",
+      "/userinfo"
+    ],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 22,
+    "name": "automod",
+    "category": "admin",
+    "description": "Configure automatic moderation settings",
+    "usage": "/automod <enable/disable> <type>",
+    "examples": [
+      "/automod enable spam",
+      "/automod disable links"
+    ],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 23,
+    "name": "filter",
+    "category": "admin",
+    "description": "Manage word filter for automatic message deletion",
+    "usage": "/filter <add/remove/list> [word]",
+    "examples": [
+      "/filter add badword",
+      "/filter remove oldword",
+      "/filter list"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 24,
+    "name": "announcement",
+    "category": "admin",
+    "description": "Create and send server announcements",
+    "usage": "/announcement <channel> <message>",
+    "examples": ["/announcement #announcements Welcome to our server!"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 25,
+    "name": "backup",
+    "category": "admin",
+    "description": "Create a backup of server settings and configuration",
+    "usage": "/backup create [name]",
+    "examples": ["/backup create daily-backup"],
+    "permissions": ["ADMINISTRATOR"]
+  },
+  {
+    "id": 26,
+    "name": "restore",
+    "category": "admin",
+    "description": "Restore server from a backup",
+    "usage": "/restore <backup-id>",
+    "examples": ["/restore backup_123456"],
+    "permissions": ["ADMINISTRATOR"]
+  },
+  {
+    "id": 27,
+    "name": "welcome",
+    "category": "admin",
+    "description": "Configure welcome message for new members",
+    "usage": "/welcome set <channel> <message>",
+    "examples": ["/welcome set #welcome Welcome {user} to {server}!"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 28,
+    "name": "goodbye",
+    "category": "admin",
+    "description": "Configure goodbye message for leaving members",
+    "usage": "/goodbye set <channel> <message>",
+    "examples": ["/goodbye set #general {user} has left the server"],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 29,
+    "name": "autorole",
+    "category": "admin",
+    "description": "Set roles to automatically assign to new members",
+    "usage": "/autorole <add/remove> <role>",
+    "examples": [
+      "/autorole add @Member",
+      "/autorole remove @Newbie"
+    ],
+    "permissions": ["MANAGE_ROLES"]
+  },
+  {
+    "id": 30,
+    "name": "tempban",
+    "category": "admin",
+    "description": "Temporarily ban a user for specified duration",
+    "usage": "/tempban <user> <duration> [reason]",
+    "examples": [
+      "/tempban @user 7d Repeated violations",
+      "/tempban @user 24h"
+    ],
+    "permissions": ["BAN_MEMBERS"]
+  },
+  {
+    "id": 31,
+    "name": "unban",
+    "category": "admin",
+    "description": "Remove ban from a user",
+    "usage": "/unban <user-id> [reason]",
+    "examples": ["/unban 123456789012345678 Appeal accepted"],
+    "permissions": ["BAN_MEMBERS"]
+  },
+  {
+    "id": 32,
+    "name": "banlist",
+    "category": "admin",
+    "description": "Display list of banned users",
+    "usage": "/banlist",
+    "examples": ["/banlist"],
+    "permissions": ["BAN_MEMBERS"]
+  },
+  {
+    "id": 33,
+    "name": "massban",
+    "category": "admin",
+    "description": "Ban multiple users at once",
+    "usage": "/massban <user1> <user2> [reason]",
+    "examples": ["/massban @user1 @user2 @user3 Coordinated spam"],
+    "permissions": ["BAN_MEMBERS"]
+  },
+  {
+    "id": 34,
+    "name": "masskick",
+    "category": "admin",
+    "description": "Kick multiple users at once",
+    "usage": "/masskick <user1> <user2> [reason]",
+    "examples": ["/masskick @user1 @user2 Rule violations"],
+    "permissions": ["KICK_MEMBERS"]
+  },
+  {
+    "id": 35,
+    "name": "massrole",
+    "category": "admin",
+    "description": "Add or remove roles from multiple users",
+    "usage": "/massrole <add/remove> <role> <user1> <user2>",
+    "examples": ["/massrole add @VIP @user1 @user2"],
+    "permissions": ["MANAGE_ROLES"]
+  },
+  {
+    "id": 36,
+    "name": "raid",
+    "category": "admin",
+    "description": "Enable raid protection mode",
+    "usage": "/raid <enable/disable>",
+    "examples": [
+      "/raid enable",
+      "/raid disable"
+    ],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 37,
+    "name": "antiinvite",
+    "category": "admin",
+    "description": "Toggle invite link detection and deletion",
+    "usage": "/antiinvite <enable/disable>",
+    "examples": [
+      "/antiinvite enable",
+      "/antiinvite disable"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 38,
+    "name": "antilink",
+    "category": "admin",
+    "description": "Toggle link detection and deletion",
+    "usage": "/antilink <enable/disable>",
+    "examples": [
+      "/antilink enable",
+      "/antilink disable"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 39,
+    "name": "antispam",
+    "category": "admin",
+    "description": "Configure anti-spam protection settings",
+    "usage": "/antispam <enable/disable> [threshold]",
+    "examples": [
+      "/antispam enable 5",
+      "/antispam disable"
+    ],
+    "permissions": ["MANAGE_MESSAGES"]
+  },
+  {
+    "id": 40,
+    "name": "settings",
+    "category": "admin",
+    "description": "View and modify bot settings for the server",
+    "usage": "/settings [category]",
+    "examples": [
+      "/settings",
+      "/settings moderation"
+    ],
+    "permissions": ["MANAGE_GUILD"]
+  },
+  {
+    "id": 41,
+    "name": "help",
+    "category": "general",
+    "description": "Display help information for bot commands",
+    "usage": "/help [command]",
+    "examples": [
+      "/help",
+      "/help ban"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 42,
+    "name": "ping",
+    "category": "general",
+    "description": "Check bot latency and response time",
+    "usage": "/ping",
+    "examples": ["/ping"],
+    "permissions": []
+  },
+  {
+    "id": 43,
+    "name": "avatar",
+    "category": "general",
+    "description": "Display user's avatar image",
+    "usage": "/avatar [user]",
+    "examples": [
+      "/avatar",
+      "/avatar @user"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 44,
+    "name": "invite",
+    "category": "general",
+    "description": "Get bot invite link",
+    "usage": "/invite",
+    "examples": ["/invite"],
+    "permissions": []
+  },
+  {
+    "id": 45,
+    "name": "stats",
+    "category": "general",
+    "description": "Display bot statistics and information",
+    "usage": "/stats",
+    "examples": ["/stats"],
+    "permissions": []
+  },
+  {
+    "id": 46,
+    "name": "weather",
+    "category": "general",
+    "description": "Get weather information for a location",
+    "usage": "/weather <location>",
+    "examples": [
+      "/weather New York",
+      "/weather London"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 47,
+    "name": "translate",
+    "category": "general",
+    "description": "Translate text to specified language",
+    "usage": "/translate <language> <text>",
+    "examples": [
+      "/translate spanish Hello world",
+      "/translate french Good morning"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 48,
+    "name": "remindme",
+    "category": "general",
+    "description": "Set a reminder for yourself",
+    "usage": "/remindme <time> <message>",
+    "examples": [
+      "/remindme 1h Take a break",
+      "/remindme 30m Check emails"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 49,
+    "name": "poll",
+    "category": "general",
+    "description": "Create a poll with multiple options",
+    "usage": "/poll <question> <option1> <option2> [more options]",
+    "examples": ["/poll \"What's your favorite color?\" Red Blue Green"],
+    "permissions": []
+  },
+  {
+    "id": 50,
+    "name": "support",
+    "category": "general",
+    "description": "Get support server invite and help information",
+    "usage": "/support",
+    "examples": ["/support"],
+    "permissions": []
+  },
+  {
+    "id": 51,
+    "name": "rps",
+    "category": "games",
+    "description": "Play Rock Paper Scissors against the bot",
+    "usage": "/rps <rock/paper/scissors>",
+    "examples": [
+      "/rps rock",
+      "/rps paper"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 52,
+    "name": "dice",
+    "category": "games",
+    "description": "Roll dice with specified number of sides",
+    "usage": "/dice [sides]",
+    "examples": [
+      "/dice",
+      "/dice 20"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 53,
+    "name": "coinflip",
+    "category": "games",
+    "description": "Flip a coin and get heads or tails",
+    "usage": "/coinflip",
+    "examples": ["/coinflip"],
+    "permissions": []
+  },
+  {
+    "id": 54,
+    "name": "8ball",
+    "category": "games",
+    "description": "Ask the magic 8-ball a question",
+    "usage": "/8ball <question>",
+    "examples": ["/8ball Will it rain tomorrow?"],
+    "permissions": []
+  },
+  {
+    "id": 55,
+    "name": "trivia",
+    "category": "games",
+    "description": "Start a trivia game with random questions",
+    "usage": "/trivia [category]",
+    "examples": [
+      "/trivia",
+      "/trivia science"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 56,
+    "name": "guess",
+    "category": "games",
+    "description": "Play a number guessing game",
+    "usage": "/guess [max_number]",
+    "examples": [
+      "/guess",
+      "/guess 50"
+    ],
+    "permissions": []
+  },
+  {
+    "id": 57,
+    "name": "hangman",
+    "category": "games",
+    "description": "Start a hangman word guessing game",
+    "usage": "/hangman [difficulty]",
+    "examples": [
+      "/hangman",
+      "/hangman hard"
+    ],
+    "permissions": []
+  }
+]
