@@ -3,10 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import Badge from "@/components/atoms/Badge";
+import SearchBar from "@/components/molecules/SearchBar";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
@@ -17,7 +19,11 @@ import {
   updateAutoResponder,
   deleteAutoResponder,
   getEmbedMessages,
-  createEmbedMessage
+  createEmbedMessage,
+  getCommandAnalytics,
+  getUsageFrequency,
+  getPeakUsageTimes,
+  getPopularCommands
 } from "@/services/api/guildService";
 
 const ServerDashboardPage = () => {
@@ -25,10 +31,19 @@ const ServerDashboardPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   
-  const [guild, setGuild] = useState(null);
+const [guild, setGuild] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("dashboard");
+  
+  // Dashboard analytics states
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [timePeriod, setTimePeriod] = useState("7d");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("usage");
+  const [sortOrder, setSortOrder] = useState("desc");
   
   // Auto-responder states
   const [autoResponders, setAutoResponders] = useState([]);
@@ -59,6 +74,12 @@ const ServerDashboardPage = () => {
     loadServerData();
   }, [serverId, isAuthenticated, navigate]);
 
+  useEffect(() => {
+    if (activeTab === "dashboard") {
+      loadAnalyticsData();
+    }
+  }, [activeTab, timePeriod]);
+
   const loadServerData = async () => {
     try {
       setLoading(true);
@@ -77,6 +98,30 @@ const ServerDashboardPage = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadAnalyticsData = async () => {
+    try {
+      setAnalyticsLoading(true);
+      
+      const [analytics, frequency, peakTimes, popular] = await Promise.all([
+        getCommandAnalytics(serverId, timePeriod),
+        getUsageFrequency(serverId, timePeriod),
+        getPeakUsageTimes(serverId, timePeriod),
+        getPopularCommands(serverId, timePeriod)
+      ]);
+      
+      setAnalyticsData({
+        overview: analytics,
+        frequency,
+        peakTimes,
+        popular
+      });
+    } catch (err) {
+      toast.error("Failed to load analytics data");
+    } finally {
+      setAnalyticsLoading(false);
     }
   };
 
@@ -155,12 +200,140 @@ const ServerDashboardPage = () => {
   if (error) return <Error message={error} onRetry={loadServerData} />;
   if (!guild) return <Error message="Server not found" />;
 
-  const tabs = [
-    { id: "overview", name: "Overview", icon: "BarChart3" },
+const tabs = [
+    { id: "dashboard", name: "Analytics Dashboard", icon: "BarChart3" },
     { id: "responders", name: "Auto Responders", icon: "MessageSquare" },
     { id: "embeds", name: "Embed Builder", icon: "Layout" },
     { id: "settings", name: "Settings", icon: "Settings" }
   ];
+
+  // Dashboard filter functions
+  const filteredCommands = analyticsData?.popular?.filter(command => {
+    const matchesSearch = command.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || command.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  }).sort((a, b) => {
+    const multiplier = sortOrder === "desc" ? -1 : 1;
+    switch (sortBy) {
+      case "usage":
+        return (a.usageCount - b.usageCount) * multiplier;
+      case "name":
+        return a.name.localeCompare(b.name) * multiplier;
+      case "category":
+        return a.category.localeCompare(b.category) * multiplier;
+      default:
+        return 0;
+    }
+  }) || [];
+
+  const categories = [
+    { id: "all", name: "All Categories" },
+    { id: "admin", name: "Administrative" },
+    { id: "general", name: "General" },
+    { id: "games", name: "Games" }
+  ];
+
+  const timePeriods = [
+    { id: "24h", name: "Last 24 Hours" },
+    { id: "7d", name: "Last 7 Days" },
+    { id: "30d", name: "Last 30 Days" },
+    { id: "90d", name: "Last 90 Days" }
+  ];
+
+  // Chart configurations
+  const usageFrequencyChart = {
+    options: {
+      chart: {
+        type: "line",
+        toolbar: { show: false },
+        background: "transparent"
+      },
+      theme: { mode: "dark" },
+      colors: ["#5865F2", "#57F287", "#FEE75C"],
+      stroke: { curve: "smooth", width: 3 },
+      xaxis: {
+        categories: analyticsData?.frequency?.labels || [],
+        labels: { style: { colors: "#9CA3AF" } }
+      },
+      yaxis: {
+        labels: { style: { colors: "#9CA3AF" } }
+      },
+      grid: {
+        borderColor: "#374151",
+        strokeDashArray: 3
+      },
+      tooltip: {
+        theme: "dark",
+        style: { fontSize: "12px" }
+      },
+      legend: {
+        labels: { colors: "#9CA3AF" }
+      }
+    },
+    series: analyticsData?.frequency?.series || []
+  };
+
+  const peakUsageChart = {
+    options: {
+      chart: {
+        type: "heatmap",
+        toolbar: { show: false },
+        background: "transparent"
+      },
+      theme: { mode: "dark" },
+      colors: ["#5865F2"],
+      xaxis: {
+        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        labels: { style: { colors: "#9CA3AF" } }
+      },
+      yaxis: {
+        categories: Array.from({length: 24}, (_, i) => `${i}:00`),
+        labels: { style: { colors: "#9CA3AF" } }
+      },
+      tooltip: {
+        theme: "dark",
+        custom: function({series, seriesIndex, dataPointIndex, w}) {
+          const day = w.globals.labels[dataPointIndex];
+          const hour = w.config.yaxis[0].categories[seriesIndex];
+          const value = series[seriesIndex][dataPointIndex];
+          return `<div class="p-2"><strong>${day} at ${hour}</strong><br/>Commands: ${value}</div>`;
+        }
+      }
+    },
+    series: analyticsData?.peakTimes?.series || []
+  };
+
+  const categoryDistributionChart = {
+    options: {
+      chart: {
+        type: "donut",
+        background: "transparent"
+      },
+      theme: { mode: "dark" },
+      colors: ["#5865F2", "#57F287", "#FEE75C", "#ED4245"],
+      labels: analyticsData?.overview?.categoryDistribution?.map(c => c.name) || [],
+      legend: {
+        position: "bottom",
+        labels: { colors: "#9CA3AF" }
+      },
+      tooltip: {
+        theme: "dark",
+        y: {
+          formatter: function (val) {
+            return val + " commands";
+          }
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: { width: 200 },
+          legend: { position: "bottom" }
+        }
+      }]
+    },
+    series: analyticsData?.overview?.categoryDistribution?.map(c => c.count) || []
+  };
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -541,6 +714,305 @@ const ServerDashboardPage = () => {
                 )}
               </div>
             </div>
+          </div>
+        )}
+{/* Analytics Dashboard Tab */}
+        {activeTab === "dashboard" && (
+          <div className="space-y-6">
+            {analyticsLoading ? (
+              <Loading />
+            ) : analyticsData ? (
+              <>
+                {/* Dashboard Header */}
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                      Command Analytics Dashboard
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Analyze command usage patterns and server activity
+                    </p>
+                  </div>
+                  
+                  {/* Time Period Selector */}
+                  <div className="flex gap-2">
+                    {timePeriods.map((period) => (
+                      <button
+                        key={period.id}
+                        onClick={() => setTimePeriod(period.id)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                          timePeriod === period.id
+                            ? "bg-discord-blurple text-white"
+                            : "bg-gray-100 dark:bg-discord-tertiary text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-discord-secondary"
+                        }`}
+                      >
+                        {period.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Overview Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Total Commands</p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {analyticsData.overview?.totalCommands || 0}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-discord-blurple/10 rounded-lg">
+                        <ApperIcon name="Hash" size={24} className="text-discord-blurple" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Usage Today</p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {analyticsData.overview?.usageToday || 0}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-discord-green/10 rounded-lg">
+                        <ApperIcon name="TrendingUp" size={24} className="text-discord-green" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Peak Hour</p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {analyticsData.overview?.peakHour || "N/A"}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-discord-yellow/10 rounded-lg">
+                        <ApperIcon name="Clock" size={24} className="text-discord-yellow" />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Active Users</p>
+                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                          {analyticsData.overview?.activeUsers || 0}
+                        </p>
+                      </div>
+                      <div className="p-3 bg-purple-500/10 rounded-lg">
+                        <ApperIcon name="Users" size={24} className="text-purple-500" />
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Charts Row */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Usage Frequency Chart */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Command Usage Frequency
+                      </h3>
+                      <ApperIcon name="LineChart" size={20} className="text-gray-500" />
+                    </div>
+                    <Chart
+                      options={usageFrequencyChart.options}
+                      series={usageFrequencyChart.series}
+                      type="line"
+                      height={300}
+                    />
+                  </motion.div>
+
+                  {/* Category Distribution */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="card p-6"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        Category Distribution
+                      </h3>
+                      <ApperIcon name="PieChart" size={20} className="text-gray-500" />
+                    </div>
+                    <Chart
+                      options={categoryDistributionChart.options}
+                      series={categoryDistributionChart.series}
+                      type="donut"
+                      height={300}
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Peak Usage Heatmap */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="card p-6"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Peak Usage Times
+                    </h3>
+                    <ApperIcon name="Calendar" size={20} className="text-gray-500" />
+                  </div>
+                  <Chart
+                    options={peakUsageChart.options}
+                    series={peakUsageChart.series}
+                    type="heatmap"
+                    height={400}
+                  />
+                </motion.div>
+
+                {/* Popular Commands Section */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="card p-6"
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      Popular Commands Analysis
+                    </h3>
+                    <ApperIcon name="Star" size={20} className="text-gray-500" />
+                  </div>
+
+                  {/* Filters */}
+                  <div className="flex flex-col lg:flex-row gap-4 mb-6">
+                    <div className="flex-1">
+                      <SearchBar
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Search commands..."
+                        onClear={() => setSearchTerm("")}
+                      />
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="form-input w-auto"
+                      >
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                      
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="form-input w-auto"
+                      >
+                        <option value="usage">Sort by Usage</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="category">Sort by Category</option>
+                      </select>
+                      
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
+                        icon={sortOrder === "desc" ? "ArrowDown" : "ArrowUp"}
+                      >
+                        {sortOrder.toUpperCase()}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Commands List */}
+                  <div className="space-y-3">
+                    {filteredCommands.length === 0 ? (
+                      <Empty
+                        title="No commands found"
+                        description="Try adjusting your search or filter criteria."
+                        icon="Search"
+                      />
+                    ) : (
+                      filteredCommands.slice(0, 10).map((command, index) => (
+                        <div
+                          key={command.name}
+                          className="flex items-center justify-between p-4 bg-gray-50 dark:bg-discord-tertiary rounded-lg hover:bg-gray-100 dark:hover:bg-discord-secondary transition-colors duration-200"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center justify-center w-8 h-8 bg-discord-blurple text-white rounded-full text-sm font-bold">
+                              {index + 1}
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900 dark:text-white">
+                                /{command.name}
+                              </h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {command.description}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-3">
+                            <Badge
+                              variant={command.category === "admin" ? "destructive" : 
+                                     command.category === "general" ? "default" : "secondary"}
+                              size="sm"
+                            >
+                              {command.category}
+                            </Badge>
+                            <div className="text-right">
+                              <p className="font-semibold text-gray-900 dark:text-white">
+                                {command.usageCount}
+                              </p>
+                              <p className="text-xs text-gray-500">uses</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              </>
+            ) : (
+              <Empty
+                title="No analytics data available"
+                description="Analytics data will appear here once commands are used."
+                icon="BarChart3"
+                action={loadAnalyticsData}
+                actionText="Refresh Data"
+              />
+            )}
           </div>
         )}
 
