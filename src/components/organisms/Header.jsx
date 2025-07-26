@@ -5,6 +5,7 @@ import { logout } from "@/store/authSlice";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import ThemeToggle from "@/components/molecules/ThemeToggle";
+import LanguageDropdown from "@/components/molecules/LanguageDropdown";
 
 const Header = ({ onMenuToggle }) => {
   const dispatch = useDispatch();
@@ -42,8 +43,9 @@ const Header = ({ onMenuToggle }) => {
             </h1>
           </div>
 
-          {/* Right side actions */}
+{/* Right side actions */}
           <div className="flex items-center gap-4">
+            <LanguageDropdown />
             <ThemeToggle />
             
             {isAuthenticated ? (
